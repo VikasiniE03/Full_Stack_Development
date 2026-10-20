@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Form</title>
+</head>
+<body>
+
+    <h2>Student Registration Form</h2>
+
+    <form id="registrationForm">
+        <label>Name:</label>
+        <input type="text" id="name">
+        <span id="nameError"></span>
+        <br><br>
+
+        <label>Email:</label>
+        <input type="text" id="email">
+        <span id="emailError"></span>
+        <br><br>
+
+        <label>Mobile Number:</label>
+        <input type="text" id="mobile">
+        <span id="mobileError"></span>
+        <br><br>
+
+        <label>Password:</label>
+        <input type="password" id="password">
+        <span id="passwordError"></span>
+        <br><br>
+
+        <label>Confirm Password:</label>
+        <input type="password" id="confirmPassword">
+        <span id="confirmPasswordError"></span>
+        <br><br>
+
+        <label>Age:</label>
+        <input type="number" id="age">
+        <span id="ageError"></span>
+        <br><br>
+
+        <label>Course:</label>
+        <select id="course">
+            <option value="">-- Select Course --</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="NodeJS">Node.js</option>
+            <option value="Python">Python</option>
+        </select>
+        <span id="courseError"></span>
+        <br><br>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p id="successMessage"></p>
+
+    <script>
+        document.getElementById("registrationForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let valid = true;
+
+            // Extract field values efficiently
+            const fields = ['name', 'email', 'mobile', 'password', 'confirmPassword', 'age', 'course'];
+            const val = Object.fromEntries(fields.map(f => [f, document.getElementById(f).value.trim()]));
+
+            // Clear all previous errors and success text
+            fields.forEach(f => document.getElementById(f + 'Error').textContent = "");
+            document.getElementById("successMessage").textContent = "";
+
+            // Error helper function
+            const setErr = (id, txt) => { document.getElementById(id + 'Error').textContent = txt; valid = false; };
+
+            // Form validations
+            if (!val.name) setErr('name', 'Name is required.');
+            else if (val.name.length < 3) setErr('name', 'Name must contain at least 3 characters.');
+
+            if (!val.email) setErr('email', 'Email is required.');
+            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.email)) setErr('email', 'Enter a valid email address.');
+
+            if (!/^[0-9]{10}$/.test(val.mobile)) setErr('mobile', 'Mobile number must contain exactly 10 digits.');
+            if (val.password.length < 6) setErr('password', 'Password must contain at least 6 characters.');
+            if (val.password !== val.confirmPassword) setErr('confirmPassword', 'Passwords do not match.');
+
+            if (!val.age) setErr('age', 'Age is required.');
+            else if (Number(val.age) < 18 || Number(val.age) > 60) setErr('age', 'Age must be between 18 and 60.');
+
+            if (!val.course) setErr('course', 'Please select a course.');
+
+            // Success execution
+            if (valid) {
+                document.getElementById("successMessage").textContent = "Registration successful!";
+                this.reset();
+            }
+        });
+    </script>
+
+</body>
+</html>
